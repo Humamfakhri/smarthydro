@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "491443402489",
+    "project_id": "smarthydro-287a5",
+    "storage_bucket": "smarthydro-287a5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491443402489:android:1332c7f9cdc7b0a6569428",
+        "android_client_info": {
+          "package_name": "com.humam.smarthydro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTMyBhIRP-1yw8CeICc8tfEUBjOyKl4Vs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
