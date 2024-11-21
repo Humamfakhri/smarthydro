@@ -1,14 +1,16 @@
+
 package com.humam.smarthydro
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,24 +22,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.humam.smarthydro.model.WaterLevel
+import com.humam.smarthydro.viewmodels.MainViewModel
 
 val waterLevelList = listOf(
     WaterLevel(level = "4", wet = "YES"),
@@ -46,38 +40,6 @@ val waterLevelList = listOf(
     WaterLevel(level = "5", wet = "YES"),
     WaterLevel(level = "4", wet = "YES")
 )
-
-
-val realtimeDb: DatabaseReference =
-    FirebaseDatabase.getInstance("https://smarthydro-287a5-default-rtdb.asia-southeast1.firebasedatabase.app").reference
-
-fun getWaterLevelData(onDataReceived: (List<WaterLevel>) -> Unit) {
-    val waterLevelRef = realtimeDb.child("water-level")
-
-    waterLevelRef.addValueEventListener(object : ValueEventListener {
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            if (dataSnapshot.exists()) {
-                val waterLevels = mutableListOf<WaterLevel>()
-                for (snapshot in dataSnapshot.children) {
-                    val item = snapshot.getValue(WaterLevel::class.java)
-                    if (item != null) {
-                        Log.d("Firebase", "Level = ${item.level}")
-                        waterLevels.add(item)
-                    }
-                }
-                onDataReceived(waterLevels) // Send data to callback
-            } else {
-                Log.d("Firebase", "No data found at 'water-level'")
-                onDataReceived(emptyList()) // Send empty list if there is no data
-            }
-        }
-
-        override fun onCancelled(databaseError: DatabaseError) {
-            Log.w("Firebase", "loadPost:onCancelled", databaseError.toException())
-            onDataReceived(emptyList()) // Send empty list if there is an error
-        }
-    })
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -138,7 +100,15 @@ fun Banner() {
 }
 
 @Composable
-fun MainScreen(waterLevels: List<WaterLevel>) {
+fun MainScreen() {
+    val viewModel: MainViewModel = viewModel()
+
+    val waterLevels = viewModel.waterLevels.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = viewModel) {
+        viewModel.getWaterLevels()
+    }
+
     Scaffold(
         topBar = { AppTopBar() }
     ) { innerPadding ->
@@ -158,7 +128,7 @@ fun MainScreen(waterLevels: List<WaterLevel>) {
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                itemsIndexed(waterLevels) { index, waterLevel ->
+                itemsIndexed(waterLevels.value) { index, waterLevel ->
                     WaterLevelItem(index + 1, waterLevel)
                 }
             }
