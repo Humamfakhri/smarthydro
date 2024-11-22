@@ -46,45 +46,48 @@ fun AppTopBar() {
 @Composable
 fun WaterLevelItem(index: Int, waterLevel: WaterLevel) {
     val isWet = waterLevel.level != "0" && waterLevel.wet != "NO"
+    val icon = if (isWet) R.drawable.water else R.drawable.warning
 
-    Column(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(14.dp))
-            .padding(25.dp, 25.dp)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.spacedBy(18.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                // Determine the image based on wet conditions
-                painter = painterResource(if (isWet) R.drawable.water else R.drawable.warning),
-                contentDescription = "",
-                Modifier
-                    .size(45.dp)
+            .background(
+                color = MaterialTheme.colorScheme.background,
+                shape = RoundedCornerShape(16.dp)
             )
-            Column {
-                Text("Sensor $index", fontWeight = FontWeight.Bold)
-                Text("${waterLevel.level} cm")
-            }
+            .padding(24.dp, 24.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(icon),
+            contentDescription = null,
+            modifier = Modifier
+                .size(44.dp)
+                .padding(end = 8.dp)
+        )
+        Column {
+            Text("Sensor $index", fontWeight = FontWeight.Bold)
+            Text("${waterLevel.level} cm")
         }
     }
 }
 
 @Composable
 fun Banner() {
+    val icon = if (isSystemInDarkTheme()) R.drawable.collab_white else R.drawable.collab
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(
-                MaterialTheme.colorScheme.background,
-                shape = RoundedCornerShape(14.dp)
+                color = MaterialTheme.colorScheme.background,
+                shape = RoundedCornerShape(16.dp)
             )
-            .padding(20.dp, 20.dp)
+            .padding(16.dp, 16.dp)
     ) {
         Image(
-            painter = painterResource(if (isSystemInDarkTheme()) R.drawable.collab_white else R.drawable.collab),
+            painter = painterResource(icon),
             contentDescription = "Collaboration Logo iCATS x Telkom University"
         )
     }
@@ -95,9 +98,7 @@ fun MainScreen() {
     val viewModel: MainViewModel = viewModel()
     val waterLevels by viewModel.waterLevels.collectAsState()
 
-    Scaffold(
-        topBar = { AppTopBar() }
-    ) { innerPadding ->
+    Scaffold(topBar = { AppTopBar() }) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -110,8 +111,7 @@ fun MainScreen() {
             Banner()
             HorizontalDivider()
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
+                modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 itemsIndexed(waterLevels) { index, waterLevel ->
