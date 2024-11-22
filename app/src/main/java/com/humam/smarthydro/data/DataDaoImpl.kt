@@ -35,48 +35,7 @@ class DataDaoImpl(val db: FirebaseDatabase) : DataDao {
         }
     }
 
-    override suspend fun getWaterLevelById(id: Int): Flow<WaterLevel> = callbackFlow {
-        val listener = db.getReference(DataDB.WATER_LEVELS).child(id.toString())
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val level = snapshot.child("level").getValue(String::class.java) ?: ""
-                    val wet = snapshot.child("wet").getValue(String::class.java) ?: ""
-                    trySend(WaterLevel(level, wet))
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    close(error.toException())
-                }
-            })
-
-        awaitClose {
-            db.getReference(DataDB.WATER_LEVELS).child(id.toString()).removeEventListener(listener)
-        }
-    }
-
     override fun addToken(token: FcmToken) {
         db.getReference(DataDB.FCM_TOKEN).push().setValue(token)
-    }
-
-    override suspend fun getAllTokens(): Flow<MutableList<FcmToken>> = callbackFlow {
-        val listener = db.getReference(DataDB.FCM_TOKEN)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val tokens = mutableListOf<FcmToken>()
-                    for (data in snapshot.children) {
-                        val token = data.child("token").getValue(String::class.java) ?: ""
-                        tokens.add(FcmToken(token))
-                    }
-                    trySend(tokens)
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    close(error.toException())
-                }
-            })
-
-        awaitClose {
-            db.getReference(DataDB.FCM_TOKEN).removeEventListener(listener)
-        }
     }
 }

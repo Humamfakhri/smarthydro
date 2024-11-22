@@ -33,14 +33,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.humam.smarthydro.model.WaterLevel
 import com.humam.smarthydro.viewmodels.MainViewModel
 
-val waterLevelList = listOf(
-    WaterLevel(level = "4", wet = "YES"),
-    WaterLevel(level = "3", wet = "YES"),
-    WaterLevel(level = "0", wet = "NO"),
-    WaterLevel(level = "5", wet = "YES"),
-    WaterLevel(level = "4", wet = "YES")
-)
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar() {
