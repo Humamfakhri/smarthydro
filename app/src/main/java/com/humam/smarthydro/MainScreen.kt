@@ -1,4 +1,3 @@
-
 package com.humam.smarthydro
 
 import androidx.compose.foundation.Image
@@ -22,13 +21,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.humam.smarthydro.model.WaterLevel
 import com.humam.smarthydro.viewmodels.MainViewModel
@@ -94,12 +93,7 @@ fun Banner() {
 @Composable
 fun MainScreen() {
     val viewModel: MainViewModel = viewModel()
-
-    val waterLevels = viewModel.waterLevels.collectAsStateWithLifecycle()
-
-    LaunchedEffect(key1 = viewModel) {
-        viewModel.getWaterLevels()
-    }
+    val waterLevels by viewModel.waterLevels.collectAsState()
 
     Scaffold(
         topBar = { AppTopBar() }
@@ -120,7 +114,7 @@ fun MainScreen() {
                     .fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                itemsIndexed(waterLevels.value) { index, waterLevel ->
+                itemsIndexed(waterLevels) { index, waterLevel ->
                     WaterLevelItem(index + 1, waterLevel)
                 }
             }
