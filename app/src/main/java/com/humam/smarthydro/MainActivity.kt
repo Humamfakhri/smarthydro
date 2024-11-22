@@ -8,6 +8,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import com.humam.smarthydro.ui.screen.MainScreen
 import com.humam.smarthydro.ui.theme.SmartHydroTheme
 
 class MainActivity : ComponentActivity() {

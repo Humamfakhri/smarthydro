@@ -1,4 +1,4 @@
-package com.humam.smarthydro
+package com.humam.smarthydro.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,8 +29,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.humam.smarthydro.R
 import com.humam.smarthydro.model.WaterLevel
-import com.humam.smarthydro.viewmodels.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

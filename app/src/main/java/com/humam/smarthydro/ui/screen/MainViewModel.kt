@@ -1,4 +1,4 @@
-package com.humam.smarthydro.viewmodels
+package com.humam.smarthydro.ui.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
