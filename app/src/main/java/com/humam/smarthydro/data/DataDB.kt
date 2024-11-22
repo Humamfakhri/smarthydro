@@ -9,7 +9,6 @@ class DataDB {
 
     companion object {
         const val WATER_LEVELS = "water-level"
-        const val FCM_TOKEN = "fcm-token"
 
         @Volatile
         var INSTANCE: DataDB? = null

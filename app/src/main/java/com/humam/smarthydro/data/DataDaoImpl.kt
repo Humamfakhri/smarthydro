@@ -4,7 +4,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.humam.smarthydro.model.FcmToken
 import com.humam.smarthydro.model.WaterLevel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -33,9 +32,5 @@ class DataDaoImpl(val db: FirebaseDatabase) : DataDao {
         awaitClose {
             db.getReference(DataDB.WATER_LEVELS).removeEventListener(listener)
         }
-    }
-
-    override fun addToken(token: FcmToken) {
-        db.getReference(DataDB.FCM_TOKEN).push().setValue(token)
     }
 }
